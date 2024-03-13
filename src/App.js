@@ -7,9 +7,11 @@ import FormEntregador from './views/entregador/FormEntregador';
 import { Segment } from 'semantic-ui-react';
 
 function App() {
+
+  //teste
   return (
     <div className="App">
-
+      
       <FormEntregador /> 
 
      <div style={{marginTop: '6%'}}>
