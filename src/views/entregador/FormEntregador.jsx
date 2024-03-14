@@ -35,7 +35,21 @@ const options = [
 
 export default function FormEntregador() {
 
-    const [ativo, setAtivo] = useState('1');
+    const [nome, setNome] = useState();
+    const [cpf, setCpf] = useState();
+    const [rg, setRg] = useState();
+    const [dataNascimento, setDataNascimento] = useState();
+    const [foneCelular, setFoneCelular] = useState();
+    const [foneFixo, setFoneFixo] = useState();
+    const [qtdEntregasRealizadas, setQtdEntregasRealizadas] = useState();
+    const [valorFrete, setValorFrete] = useState();
+    const [enderecoRua, setEnderecoRua] = useState();
+    const [enderecoNumero, setEnderecoNumero] = useState();
+    const [enderecoBairro, setEnderecoBairro] = useState();
+    const [enderecoCidade, setEnderecoCidade] = useState();
+    const [enderecoUf, setEnderecoUf] = useState();
+    const [enderecoComplemento, setEnderecoComplemento] = useState();
+    const [ativo, setAtivo] = useState();
 
     const handleRadioChange = (e, { value }) => {
         setAtivo(value);
@@ -64,6 +78,8 @@ export default function FormEntregador() {
                                     label='Nome'
                                     maxLength="100"
                                     width={8}
+                                    value={nome}
+                                    onChange={e => setNome(e.target.value)}
                                 />
 
                                 <Form.Input
@@ -75,6 +91,8 @@ export default function FormEntregador() {
                                     <InputMask
                                         required
                                         mask="999.999.999-99"
+                                        value={cpf}
+                                        onChange={e => setCpf(e.target.value)}
                                     />
                                 </Form.Input>
 
@@ -84,6 +102,8 @@ export default function FormEntregador() {
                                     width={4}
                                     label='RG'
                                     maxLength="10"
+                                    value={rg}
+                                    onChange={e => setRg(e.target.value)}
                                 />
 
 
@@ -98,6 +118,8 @@ export default function FormEntregador() {
                                     <InputMask
 
                                         placeholder="Ex: 20/03/1985"
+                                        value={dataNascimento}
+                                        onChange={e => setDataNascimento(e.target.value)}
                                     />
 
 
@@ -111,6 +133,8 @@ export default function FormEntregador() {
 
                                     <InputMask
                                         required
+                                        value={foneCelular}
+                                        onChange={e => setFoneCelular(e.target.value)}
 
                                     />
                                 </Form.Input>
@@ -120,6 +144,8 @@ export default function FormEntregador() {
                                     fluid
 
                                     label='Fone Fixo'
+                                    value={foneFixo}
+                                    onChange={e => setFoneFixo(e.target.value)}
 
                                 />
 
@@ -128,6 +154,8 @@ export default function FormEntregador() {
                                     fluid
 
                                     label='QTD Entregas Realizadas'
+                                    value={qtdEntregasRealizadas}
+                                    onChange={e => setQtdEntregasRealizadas(e.target.value)}
 
                                 />
                                 <Form.Input
@@ -135,6 +163,8 @@ export default function FormEntregador() {
                                     fluid
 
                                     label='Valor Por Frete'
+                                    value={valorFrete}
+                                    onChange={e => setValorFrete(e.target.value)}
 
                                 />
 
@@ -152,6 +182,8 @@ export default function FormEntregador() {
                                     width={16}>
                                     <InputMask
                                         mask="(99) 9999.9999"
+                                        value={enderecoRua}
+                                        onChange={e => setEnderecoRua(e.target.value)}
                                     />
                                 </Form.Input>
 
@@ -160,6 +192,8 @@ export default function FormEntregador() {
                                     fluid
                                     label='Número'
                                     width={4}
+                                    value={enderecoNumero}
+                                    onChange={e => setEnderecoNumero(e.target.value)}
                                 >
 
                                 </Form.Input>
@@ -170,14 +204,19 @@ export default function FormEntregador() {
                                 <Form.Input
                                     fluid
                                     label='Bairro'
-                                    width={7}>
+                                    width={7}
+                                    value={enderecoBairro}
+                                    onChange={e => setEnderecoBairro(e.target.value)}>
+
 
                                 </Form.Input>
 
                                 <Form.Input
                                     fluid
                                     label='Cidade'
-                                    width={7}>
+                                    width={7}
+                                    value={enderecoCidade}
+                                    onChange={e => setEnderecoCidade(e.target.value)}>
                                     <InputMask
                                         mask="(99) 9999.9999"
                                     />
@@ -187,6 +226,7 @@ export default function FormEntregador() {
                                     fluid
                                     label='CEP'
                                     width={3}
+                                   
                                 >
 
                                 </Form.Input>
