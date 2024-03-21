@@ -2,6 +2,8 @@ import React, {useState} from "react";
 import InputMask from 'react-input-mask';
 import { Button, Container, Divider, Form, Icon } from 'semantic-ui-react';
 import axios from "axios";
+import MenuSistema from "../../MenuSistema";
+import { Link } from "react-router-dom";
 
 export default function FormProduto () {
 
@@ -37,7 +39,7 @@ export default function FormProduto () {
     return (
 
         <div>
-
+            <MenuSistema tela={'produto'} />
             <div style={{marginTop: '3%'}}>
 
                 <Container textAlign='justified' >
@@ -141,6 +143,8 @@ export default function FormProduto () {
                                 icon
                                 labelPosition='left'
                                 color='orange'
+                                as={Link}
+                                to='/list-produto'
                             >
                                 <Icon name='reply' />
                                 Voltar

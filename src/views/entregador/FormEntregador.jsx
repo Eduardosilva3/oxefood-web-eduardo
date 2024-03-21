@@ -2,7 +2,9 @@ import React from "react";
 import { useState } from "react";
 import InputMask from 'react-input-mask';
 import { Button, Container, Divider, Form, Icon } from 'semantic-ui-react';
-
+import MenuSistema from "../../MenuSistema";
+import { Link } from "react-router-dom";
+import axios from "axios";
 const options = [
     { key: 'AC', text: 'Acre', value: 'AC' },
     { key: 'AL', text: 'Alagoas', value: 'AL' },
@@ -51,13 +53,47 @@ export default function FormEntregador() {
     const [enderecoComplemento, setEnderecoComplemento] = useState();
     const [ativo, setAtivo] = useState();
 
+
+
+    function salvar() {
+
+        console.log(ativo)
+        let entregadorRequest = {
+             nome: nome,
+             cpf: cpf,
+             rg: rg,
+             dataNascimento: dataNascimento,
+             foneCelular: foneCelular,
+             foneFixo: foneFixo,
+             qtdEntregasRealizadas: qtdEntregasRealizadas,
+             valorFrete: valorFrete,
+             enderecoRua: enderecoRua,
+             enderecoNumero: enderecoNumero, 
+             enderecoBairro: enderecoBairro,
+             enderecoCidade: enderecoCidade,
+             enderecoUf: enderecoUf, 
+             ativo: ativo == 1 ? true : false
+        }
+    
+        axios.post("http://localhost:8080/api/entregador", entregadorRequest)
+        .then((response) => {
+             console.log('Entregador cadastrado com sucesso.' + response.data.id)
+        })
+        .catch((error) => {
+             console.log(error)
+        })
+    }
+
+
+
+
     const handleRadioChange = (e, { value }) => {
         setAtivo(value);
     };
     return (
 
         <div>
-
+            <MenuSistema tela={'entregador'} />
             <div style={{ marginTop: '3%' }}>
 
                 <Container textAlign='justified' >
@@ -226,6 +262,7 @@ export default function FormEntregador() {
                                     fluid
                                     label='CEP'
                                     width={3}
+                                  
                                    
                                 >
 
@@ -240,7 +277,9 @@ export default function FormEntregador() {
                                     width={16}
                                     placeholder="Selecione"
                                     options={options}
-                                >
+                                    value={enderecoUf}
+                                    onChange={e => setEnderecoUf(e.target.value)}>
+                                
 
                                 </Form.Select>
 
@@ -279,6 +318,8 @@ export default function FormEntregador() {
                                 icon
                                 labelPosition='left'
                                 color='orange'
+                                as={Link}
+                                to='/list-entregador'
                             >
                                 <Icon name='reply' />
                                 Voltar
@@ -291,6 +332,7 @@ export default function FormEntregador() {
                                 labelPosition='left'
                                 color='blue'
                                 floated='right'
+                                onClick={()=>salvar()}
                             >
                                 <Icon name='save' />
                                 Salvar
