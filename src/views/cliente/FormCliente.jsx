@@ -6,8 +6,10 @@ import axios from "axios";
 import MenuSistema from "../../MenuSistema";
 
 
+
 export default function FormCliente () {
 
+    
 
     const [nome, setNome] = useState();
     const [cpf, setCpf] = useState();
@@ -29,6 +31,7 @@ export default function FormCliente () {
     axios.post("http://localhost:8080/api/cliente", clienteRequest)
     .then((response) => {
          console.log('Cliente cadastrado com sucesso.' + response.data.id)
+         
     })
     .catch((error) => {
          console.log(error.response.data.message)

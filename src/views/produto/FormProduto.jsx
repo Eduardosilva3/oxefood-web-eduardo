@@ -7,7 +7,7 @@ import { Link } from "react-router-dom";
 
 export default function FormProduto () {
 
-    const [codigo, setCodigo] = useState();
+  const [codigo, setCodigo] = useState();
   const [titulo, setTitulo] = useState();
   const [descricao, setDescricao] = useState();
   const [valorUnitario, setValorUnitario] = useState();
