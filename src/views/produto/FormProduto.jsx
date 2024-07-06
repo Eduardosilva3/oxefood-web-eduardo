@@ -1,59 +1,97 @@
-import React, {useState} from "react";
-import InputMask from 'react-input-mask';
+import React, { useEffect, useState } from "react";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Button, Container, Divider, Form, Icon } from 'semantic-ui-react';
 import axios from "axios";
 import MenuSistema from "../../MenuSistema";
-import { Link } from "react-router-dom";
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import CurrencyInput from 'react-currency-input-field';
 
-export default function FormProduto () {
+export default function FormProduto() {
 
-  const [codigo, setCodigo] = useState();
-  const [titulo, setTitulo] = useState();
-  const [descricao, setDescricao] = useState();
-  const [valorUnitario, setValorUnitario] = useState();
-  const [tempoEntregaMinimo, setTempoEntregaMinimo] = useState();
-  const [tempoEntregaMaximo, setTempoEntregaMaximo] = useState();
+    const { state } = useLocation();
+    const navigate = useNavigate();
 
+    const [idProduto, setIdProduto] = useState();
+    const [codigo, setCodigo] = useState();
+    const [titulo, setTitulo] = useState();
+    const [descricao, setDescricao] = useState();
+    const [valorUnitario, setValorUnitario] = useState();
+    const [tempoEntregaMinimo, setTempoEntregaMinimo] = useState();
+    const [tempoEntregaMaximo, setTempoEntregaMaximo] = useState();
 
-  function salvar() {
+    useEffect(() => {
+        if (state != null && state.id != null) {
+            axios.get("http://localhost:8080/api/produto/" + state.id)
+                .then((response) => {
+                    setIdProduto(response.data.id)
+                    setCodigo(response.data.codigo)
+                    setTitulo(response.data.titulo)
+                    setDescricao(response.data.descricao)
+                    setValorUnitario(response.data.valorUnitario)
+                    setTempoEntregaMinimo(response.data.tempoEntregaMinimo)
+                    setTempoEntregaMaximo(response.data.tempoEntregaMaximo)
+                })
+        }
+    }, [state])
 
-    console.log("SAlvando")
-    let produtoRequest = {
-         codigo: codigo,
-         titulo: titulo,
-         descricao: descricao,
-         valorUnitario: valorUnitario,
-         tempoEntregaMinimo: tempoEntregaMinimo,
-         tempoEntregaMaximo: tempoEntregaMaximo
+    function parseMoney (value){
+        value = String(value);
+
+        if (value.startsWith('R$')) {
+            value.replace('R$', '').replace('.', '').replace(',', '.')
+        }else{
+            //transforma em numero e retorna
+            return parseFloat(value);
+        }
     }
 
-    axios.post("http://localhost:8080/api/produto", produtoRequest)
-    .then((response) => {
-         console.log('Produto cadastrado com sucesso.' + response.data.id)
-    })
-    .catch((error) => {
-         console.log('Erro ao incluir o um Produto.')
-    })
-}
+
+    function salvar() {
+        let produtoRequest = {
+            codigo: codigo,
+            titulo: titulo,
+            descricao: descricao,
+            valorUnitario: parseMoney(valorUnitario),
+            tempoEntregaMinimo: tempoEntregaMinimo,
+            tempoEntregaMaximo: tempoEntregaMaximo
+        }
+
+        if (idProduto != null) {
+            axios.put("http://localhost:8080/api/produto/" + idProduto, produtoRequest)
+                .then((response) => {
+                    toast.success('Produto alterado com sucesso.');
+                    setTimeout(() => navigate('/list-produto'), 2000);
+                })
+                .catch((error) => {
+                    toast.error('Erro ao alterar o produto.');
+                })
+        } else {
+            axios.post("http://localhost:8080/api/produto", produtoRequest)
+                .then((response) => {
+                    toast.success('Produto Salvo com sucesso.');
+                    setTimeout(() => navigate('/list-produto'), 2000);
+                })
+                .catch((error) => {
+                    toast.error('Erro ao salvar o produto.');
+                })
+        }
+    }
 
     return (
-
         <div>
             <MenuSistema tela={'produto'} />
-            <div style={{marginTop: '3%'}}>
-
-                <Container textAlign='justified' >
-
-                    <h2> <span style={{color: 'darkgray'}}> Produto &nbsp;<Icon name='angle double right' size="small" /> </span> Cadastro </h2>
-
-                    <Divider />
-
-                    <div style={{marginTop: '4%'}}>
-
+            <div style={{ marginTop: '3%' }}>
+                <Container textAlign='justified'>
+                <h2>
+                        <span style={{ color: 'darkgray' }}>
+                            Produto &nbsp;<Icon name='angle double right' size="small" />
+                        </span>
+                        {idProduto === undefined ? 'Cadastro' : 'Alteração'}
+                    </h2>                    <Divider />
+                    <div style={{ marginTop: '4%' }}>
                         <Form>
-
                             <Form.Group>
-
                                 <Form.Input
                                     required
                                     fluid
@@ -63,24 +101,20 @@ export default function FormProduto () {
                                     value={titulo}
                                     onChange={e => setTitulo(e.target.value)}
                                 />
-
                                 <Form.Input
-                                width={6}
+                                    width={6}
                                     required
                                     fluid
-                                    label='Codigo Produto'>
-                                        
-                                    <InputMask
+                                    label='Código Produto'
+                                >
+                                    <input
                                         required
-                                        mask="999.999.999.999.999"
                                         value={codigo}
                                         onChange={e => setCodigo(e.target.value)}
-                                    /> 
+                                    />
                                 </Form.Input>
-
                             </Form.Group>
                             <Form.Group>
-
                                 <Form.TextArea
                                     required
                                     fluid
@@ -90,52 +124,43 @@ export default function FormProduto () {
                                     value={descricao}
                                     onChange={e => setDescricao(e.target.value)}
                                 />
-
-
                             </Form.Group>
-                            
                             <Form.Group>
-
                                 <Form.Input
                                     fluid
                                     label='Valor Unitário'
-                                    width={6}
-                                    value={valorUnitario}
-                                    onChange={e => setValorUnitario(e.target.value)}
-                                    >
-                                        
+                                    width={6}>
+                                    <CurrencyInput
+                                        prefix="R$ "
+                                        decimalSeparator=","
+                                        groupSeparator="."
+                                        value={valorUnitario}
+                                        onValueChange={(value) => setValorUnitario(value)}
+                                    />
                                 </Form.Input>
-
                                 <Form.Input
                                     fluid
-                                    label='Tempo de entrega minimo em minutos'
+                                    label='Tempo de entrega mínimo em minutos'
                                     width={6}>
-                                    <InputMask 
+                                    <input
                                         placeholder="30"
                                         value={tempoEntregaMinimo}
                                         onChange={e => setTempoEntregaMinimo(e.target.value)}
-                                    /> 
+                                    />
                                 </Form.Input>
-
                                 <Form.Input
                                     fluid
-                                    label='Tempo de entrega maximo em minutos'
-                                    width={6}
-                                    value={tempoEntregaMaximo}
-                                    onChange={e => setTempoEntregaMaximo(e.target.value)}
-                                >
-                                    <InputMask 
-                                      
+                                    label='Tempo de entrega máximo em minutos'
+                                    width={6}>
+                                    <input
                                         placeholder="40"
-                                    /> 
+                                        value={tempoEntregaMaximo}
+                                        onChange={e => setTempoEntregaMaximo(e.target.value)}
+                                    />
                                 </Form.Input>
-
                             </Form.Group>
-                        
                         </Form>
-                        
-                        <div style={{marginTop: '4%'}}>
-
+                        <div style={{ marginTop: '4%' }}>
                             <Button
                                 type="button"
                                 inverted
@@ -144,12 +169,10 @@ export default function FormProduto () {
                                 labelPosition='left'
                                 color='orange'
                                 as={Link}
-                                to='/list-produto'
-                            >
+                                to='/list-produto'>
                                 <Icon name='reply' />
                                 Voltar
                             </Button>
-                                
                             <Button
                                 inverted
                                 circular
@@ -157,20 +180,15 @@ export default function FormProduto () {
                                 labelPosition='left'
                                 color='blue'
                                 floated='right'
-                                onClick={()=>salvar()}
-                                >
+                                onClick={() => salvar()}>
                                 <Icon name='save' />
                                 Salvar
                             </Button>
-
                         </div>
-
                     </div>
-                    
                 </Container>
             </div>
+            <ToastContainer />
         </div>
-
     );
-
 }

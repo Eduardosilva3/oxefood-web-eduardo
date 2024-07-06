@@ -68,6 +68,7 @@ async function remover() {
     }
 
     let arrayData = dataParam.split('-');
+    
     return arrayData[2] + '/' + arrayData[1] + '/' + arrayData[0];
 }
 return(
@@ -128,8 +129,10 @@ return(
                                           circular
                                           color='green'
                                           title='Clique aqui para editar os dados deste entregador'
-                                          icon>
-                                               <Icon name='edit' />
+                                          icon> 
+                                         
+                                        <Link to="/form-entregador" state={{id: entregador.id}} style={{color: 'green'}}><Icon name='edit' /></Link>
+
                                       </Button> &nbsp;
                                       <Button
                                                inverted
