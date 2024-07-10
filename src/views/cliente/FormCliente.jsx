@@ -20,12 +20,14 @@ export default function FormCliente() {
 
     useEffect(() => {
         if (state != null && state.id != null) {
+           
             axios.get("http://localhost:8080/api/cliente/" + state.id)
                 .then((response) => {
+                    console.log(response.data.dataNascimento)
                     setIdCliente(response.data.id)
                     setNome(response.data.nome)
                     setCpf(response.data.cpf)
-                    setDataNascimento(response.data.dataNascimento)
+                    setDataNascimento(formatarDataUpdate(response.data.dataNascimento))
                     setFoneCelular(response.data.foneCelular)
                     setFoneFixo(response.data.foneFixo)
                 })
@@ -33,6 +35,7 @@ export default function FormCliente() {
     }, [state])
 
     function formatarData(dataParam) {
+        
         if (dataParam === null || dataParam === '' || dataParam === undefined) {
             return ''
         }
@@ -40,11 +43,22 @@ export default function FormCliente() {
         return arrayData[2] + '/' + arrayData[1] + '/' + arrayData[0];
     }
 
+    function formatarDataUpdate(dataParam) {
+
+        if (dataParam === null || dataParam === '' || dataParam === undefined) {
+            return ''
+        }
+    
+        let arrayData = dataParam.split('-');
+        
+        return arrayData[2] + '/' + arrayData[1] + '/' + arrayData[0];
+    }
+
     function salvar() {
         let clienteRequest = {
             nome: nome,
             cpf: cpf,
-            dataNascimento: formatarData(dataNascimento),
+            dataNascimento: dataNascimento,
             foneCelular: foneCelular,
             foneFixo: foneFixo
         }
@@ -59,6 +73,7 @@ export default function FormCliente() {
                     toast.error('Erro ao alterar um cliente.');
                 })
         } else {
+            console.log(clienteRequest.dataNascimento)
             axios.post("http://localhost:8080/api/cliente", clienteRequest)
                 .then((response) => {
                     toast.success('Cliente cadastrado com sucesso.');
