@@ -3,7 +3,9 @@ import React from 'react';
 import { Segment } from 'semantic-ui-react';
 import './App.css';
 import Rotas from './Rotas';
-import MenuSistema from './MenuSistema';
+import { ToastContainer } from 'react-toastify';
+import "react-toastify/dist/ReactToastify.css";
+
 
 function App() {
 

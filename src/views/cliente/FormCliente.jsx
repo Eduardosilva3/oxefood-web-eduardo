@@ -4,8 +4,10 @@ import InputMask from 'react-input-mask';
 import { Button, Container, Divider, Form, Icon } from 'semantic-ui-react';
 import axios from "axios";
 import MenuSistema from "../../MenuSistema";
-import { toast, ToastContainer } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import { ToastContainer } from 'react-toastify';
+
+import {mensagemErro, notifyError, notifySuccess } from '../../views/util/Util';
+
 
 export default function FormCliente() {
 
@@ -66,21 +68,34 @@ export default function FormCliente() {
         if (idCliente != null) {
             axios.put("http://localhost:8080/api/cliente/" + idCliente, clienteRequest)
                 .then((response) => {
-                    toast.success('Cliente alterado com sucesso.');
+                    notifySuccess('Cliente alterado com sucesso.');
                     setTimeout(() => navigate('/list-cliente'), 2000);
                 })
                 .catch((error) => {
-                    toast.error('Erro ao alterar um cliente.');
+
+                    if (error.response) {
+                        notifyError(error.response.data.errors[0].defaultMessage)
+                        } else {
+                            notifyError(mensagemErro);
+                        } 
+                        
+                   
                 })
         } else {
             console.log(clienteRequest.dataNascimento)
             axios.post("http://localhost:8080/api/cliente", clienteRequest)
                 .then((response) => {
-                    toast.success('Cliente cadastrado com sucesso.');
+                    notifySuccess('Cliente cadastrado com sucesso.');
                     setTimeout(() => navigate('/list-cliente'), 2000);
                 })
                 .catch((error) => {
-                    toast.error('Erro ao incluir o cliente.');
+                    
+                    if (error.response) {
+                        notifyError(error.response.data.errors[0].defaultMessage)
+                        } else {
+                            notifyError(mensagemErro);
+                        } 
+                        
                 })
         }
     }
